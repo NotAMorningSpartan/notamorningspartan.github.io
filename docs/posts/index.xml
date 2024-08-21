@@ -1,0 +1,24 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Posts on A blog about DevOps &amp; SRE</title>
+        <link>https://notamorningspartan.github.io/posts/</link>
+        <description>Recent content in Posts on A blog about DevOps &amp; SRE</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Tue, 20 Aug 2024 23:48:19 -0500</lastBuildDate>
+        <atom:link href="https://notamorningspartan.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>My First Post</title>
+            <link>https://notamorningspartan.github.io/posts/my-first-post/</link>
+            <pubDate>Tue, 20 Aug 2024 23:48:19 -0500</pubDate>
+            
+            <guid>https://notamorningspartan.github.io/posts/my-first-post/</guid>
+            <description>Test ping 8.8.8.8 </description>
+            <content type="html"><![CDATA[<h1 id="test">Test</h1>
+<pre tabindex="0"><code>ping 8.8.8.8
+</code></pre>]]></content>
+        </item>
+        
+    </channel>
+</rss>
