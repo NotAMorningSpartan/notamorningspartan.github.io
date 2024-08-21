@@ -1,9 +1,10 @@
 baseurl      = "https://notamorningspartan.github.io"
 title        = "Simplify and Automate"
 languageCode = "en-us"
-theme        = "hello-friend-ng"
+theme        = ["hugo-embed-pdf-shortcode", "hello-friend-ng"]
 paginate     = 10
 publishDir   = "docs"
+enableInlineShortcodes = true
 
 [params]
   dateform        = "Jan 2, 2006"
