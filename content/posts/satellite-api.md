@@ -121,7 +121,7 @@ We'll need to do the same when finding the ID of our desired host collection and
 ```yaml
 - name: Find All Host Collections
   ansible.builtin.uri:
-    url: "https://{{ hostvars[inventory_hostname]['servers']['satellite'].keys() | first }}/katello/api/v2/organizations/{{ org_id }}/host_collections"
+    url: "https://satellite-01.demo.lab/katello/api/v2/organizations/{{ org_id }}/host_collections"
     method: GET
     user: "{{ satellite_username }}"
     password: "{{ satellite_password }}"
