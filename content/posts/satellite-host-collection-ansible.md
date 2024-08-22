@@ -1,5 +1,5 @@
 ---
-title: "Using Ansible to Interact with the Satellite API"
+title: "Satellite Host Collections and Ansible"
 date: 2024-08-21T15:54:51-05:00
 draft: false
 toc: false
