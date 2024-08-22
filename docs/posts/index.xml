@@ -5,19 +5,141 @@
         <description>Recent content in Posts on Simplify and Automate</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Tue, 20 Aug 2024 23:48:19 -0500</lastBuildDate>
+        <lastBuildDate>Wed, 21 Aug 2024 15:54:51 -0500</lastBuildDate>
         <atom:link href="https://notamorningspartan.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
         
         <item>
-            <title>My First Post</title>
-            <link>https://notamorningspartan.github.io/posts/my-first-post/</link>
-            <pubDate>Tue, 20 Aug 2024 23:48:19 -0500</pubDate>
+            <title>Using Ansible to Interact with the Satellite API</title>
+            <link>https://notamorningspartan.github.io/posts/satellite-api/</link>
+            <pubDate>Wed, 21 Aug 2024 15:54:51 -0500</pubDate>
             
-            <guid>https://notamorningspartan.github.io/posts/my-first-post/</guid>
-            <description>Test ping 8.8.8.8 </description>
-            <content type="html"><![CDATA[<h1 id="test">Test</h1>
-<pre tabindex="0"><code>ping 8.8.8.8
-</code></pre>]]></content>
+            <guid>https://notamorningspartan.github.io/posts/satellite-api/</guid>
+            <description>Red Hat Satellite is an essential tool in large scale enterprise environments that can be used to manage repository content, as well as provision, manage, and scan deployed systems.
+Managing connected hosts is an essential task when maintaining any deployed instance of Red Hat Satellite, and one of the easiest tools to accomplish this on a mass scale is using Ansible.
+Red Hat provides the certified redhat.satellite Ansible collection that can accomodate most workflows, of which its upstream is the theforeman.</description>
+            <content type="html"><![CDATA[<p>Red Hat Satellite is an essential tool in large scale enterprise environments that can be used to manage repository content, as well as provision, manage, and scan deployed systems.</p>
+<p>Managing connected hosts is an essential task when maintaining any deployed instance of Red Hat Satellite, and one of the easiest tools to accomplish this on a mass scale is using Ansible.</p>
+<p>Red Hat provides the certified <a href="https://github.com/RedHatSatellite/satellite-ansible-collection">redhat.satellite</a> Ansible collection that can accomodate most workflows, of which its upstream is the <a href="https://github.com/theforeman/foreman-ansible-modules">theforeman.foreman</a> Ansible collection. In this tutorial however, we&rsquo;ll make the API calls ourselves using Ansible&rsquo;s builtin <a href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html">uri</a> module, as it will help demonstrate the API output and how to use it.</p>
+<p>An important tool in organizing hosts within Satellite is the use of host collections, which can be used by later tools to perform an action on multiple hosts at once. We can use Ansible and the Satellite API to automate the mass addition of multiple content hosts to a given host collection.</p>
+<h1 id="prerequisites">Prerequisites</h1>
+<p>An account with sufficient read/write permissions to interact with host collections, organizations, and hosts is necessary to perform the changes detailed in this guide.</p>
+<p>For the sake of this tutorial, let&rsquo;s assume the following exists in our demo environment:</p>
+<ul>
+<li>Satellite Instance: <code>satellite-01.demo.lab</code></li>
+<li>Content Host: <code>host-01.demo.lab</code></li>
+<li>Host Collection: <code>demo-collection</code></li>
+<li>Organization: <code>demo-org</code></li>
+</ul>
+<h2 id="a-note-on-authentication">A Note on Authentication</h2>
+<h3 id="ssl">SSL</h3>
+<p>Upon creation of the instance, Red Hat Satellite uses a self-signed certificate for SSL. In order for API requests to function, your client machine must trust Satellite&rsquo;s certificate. You can use the following example commands to download Satellite&rsquo;s certificate and add it to your trusted certificate store on your client:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>scp user@satellite-01.demo.lab:/var/www/html/pub/katello-server-ca.crt /etc/pki/ca-trust/source/anchors/satellite-01.demo.lab-katello-server-ca.crt
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">644</span> /etc/pki/ca-trust/source/anchors/satellite-01.demo.lab-katello-server-ca.crt
+</span></span><span style="display:flex;"><span>update-ca-trust --extract
+</span></span></code></pre></div><p>Another workaround, although not secure, is to disable certificate vaidation in each Ansible task:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Example without Validation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ansible.builtin.uri</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">url</span>: <span style="color:#e6db74">&#34;https://satellite-01.demo.lab/katello/api/v2/organizations&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">method</span>: <span style="color:#ae81ff">GET</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">user</span>: <span style="color:#e6db74">&#34;{{ satellite_username }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">password</span>: <span style="color:#e6db74">&#34;{{ satellite_password }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">validate_certs</span>: <span style="color:#66d9ef">false</span>
+</span></span></code></pre></div><h3 id="authentication-methods">Authentication Methods</h3>
+<p>The tutorial below uses basic authentication when querying the Satellite API for simplicity, but there are a variety of other options available to you for authentication:</p>
+<ul>
+<li>Personal Access Tokens</li>
+<li>Limited OAuth 1.0</li>
+</ul>
+<p>Using these authentication methods is beyond the scope of this tutorial, but Red Hat provides some <a href="https://docs.redhat.com/en/documentation/red_hat_satellite/6.15/html/api_guide/chap-red_hat_satellite-api_guide-authenticating_api_calls#Authenticating_API_Calls-HTTP_Authentication_Overview">examples</a> using <code>curl</code> to get you started.</p>
+<h1 id="finding-your-organization-id">Finding your Organization ID</h1>
+<p>Before we can grab the ID of the host collection we wish to add our content hosts to, we&rsquo;ll first need to get the ID of the organization our content hosts and host collections belong to.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Find all Organizations</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ansible.builtin.uri</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">url</span>: <span style="color:#e6db74">&#34;https://satellite-01.demo.lab/katello/api/v2/organizations&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">method</span>: <span style="color:#ae81ff">GET</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">user</span>: <span style="color:#e6db74">&#34;{{ satellite_username }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">password</span>: <span style="color:#e6db74">&#34;{{ satellite_password }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">force_basic_auth</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">register</span>: <span style="color:#ae81ff">org_output</span>
+</span></span></code></pre></div><p>This task will send a GET request to the organizations endpoint, and save all outputted data to the <code>org_output</code> variable. Further inspection of <code>org_output</code> reveals the following (shortened for readability):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#e6db74">&#34;org_output&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;json&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;page&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;per_page&#34;</span>: <span style="color:#ae81ff">20</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;results&#34;</span>: [
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;created_at&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;label&#34;</span>: <span style="color:#e6db74">&#34;demo-org&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;demo-org&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;demo-org&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;updated_at&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;created_at&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;label&#34;</span>: <span style="color:#e6db74">&#34;demo-org2&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;demo-org2&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;demo-org2&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;updated_at&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span></code></pre></div><p>The endpoint outputs a list of all organizations that currently exist on the Satellite instance. We can use the <code>select</code> filter to find an item from the organization list where one of its attribute values contains the name of the organization we are looking for, and grab its ID. <code>organization</code> is a variable containing the name of our organization.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set Organization ID Fact</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ansible.builtin.set_fact</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">org_id</span>: <span style="color:#e6db74">&#34;{{ (org_output.json.results | select(&#39;search&#39;, organization))[0].id }}&#34;</span>
+</span></span></code></pre></div><h1 id="finding-the-host-collection-id">Finding the Host Collection ID</h1>
+<p>We&rsquo;ll need to do the same when finding the ID of our desired host collection and the content host. We&rsquo;ll use the above organization ID to search through only content hosts and host collections that belong to our desired organization. In the below example, <code>collection_name</code> is a variable containing the name of our desired host collection.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Find All Host Collections</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ansible.builtin.uri</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">url</span>: <span style="color:#e6db74">&#34;https://{{ hostvars[inventory_hostname][&#39;servers&#39;][&#39;satellite&#39;].keys() | first }}/katello/api/v2/organizations/{{ org_id }}/host_collections&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">method</span>: <span style="color:#ae81ff">GET</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">user</span>: <span style="color:#e6db74">&#34;{{ satellite_username }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">password</span>: <span style="color:#e6db74">&#34;{{ satellite_password }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">force_basic_auth</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">register</span>: <span style="color:#ae81ff">collection_output</span>
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set Host Collection ID</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ansible.builtin.set_fact</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">collection_id</span>: <span style="color:#e6db74">&#34;{{ (collection_output.json.results | select(&#39;search&#39;, collection_name))[0].id }}&#34;</span>
+</span></span></code></pre></div><h1 id="finding-the-content-host-id">Finding the Content Host ID</h1>
+<p>When finding the ID of our host, we&rsquo;ll structure our API call slightly differently, adding <code>?search=</code> to limit the output to only hosts that match our desired query. Otherwise, depending on the size of the environment, we would be flooded with thousands of unneeded results.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Get Host</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ansible.builtin.uri</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">url</span>: <span style="color:#e6db74">&#34;https://satellite-01.demo.lab/api/hosts?search={{ ansible_nodename }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">method</span>: <span style="color:#ae81ff">GET</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">user</span>: <span style="color:#e6db74">&#34;{{ satellite_username }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">password</span>: <span style="color:#e6db74">&#34;{{ satellite_password }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">force_basic_auth</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">register</span>: <span style="color:#ae81ff">host_output</span>
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set Host ID</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ansible.builtin.set_fact</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">host_id</span>: <span style="color:#e6db74">&#34;{{ (host_output.json.results | select(&#39;search&#39;, ansible_nodename))[0].id }}&#34;</span>
+</span></span></code></pre></div><h1 id="adding-the-content-host-to-the-host-collection">Adding the Content Host to the Host Collection</h1>
+<p>Now that we have the IDs of our content host and host collection, we can use the Satellite API to add our content host to said collection.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Add Host to Host Collection</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ansible.builtin.uri</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">url</span>: <span style="color:#e6db74">&#34;https://satellite-01.demo.lab/katello/api/v2/host_collections/{{ collection_id }}/add_hosts&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">method</span>: <span style="color:#ae81ff">PUT</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">user</span>: <span style="color:#e6db74">&#34;{{ satellite_username }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">password</span>: <span style="color:#e6db74">&#34;{{ satellite_password }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">force_basic_auth</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">body_format</span>: <span style="color:#ae81ff">json</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">headers</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">Content-Type</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">Accept</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">body</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;host_ids&#34;: </span>[ <span style="color:#e6db74">&#34;{{ host_id }}&#34;</span> ]
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>Ta-da! Your selected content host is now a part of your desired host collection. Hopefully this gives you enough of an overview on interacting with Satellite&rsquo;s API to apply this to other IT workflows.</p>
+<p>For reference, I&rsquo;ve provided links to the Satellite API Guide, and the Foreman API Guide (Foreman is the upstream project for RH Satellite).</p>
+<h1 id="see-also">See Also</h1>
+<p><a href="https://apidocs.theforeman.org/foreman/latest/apidoc/v2.html">Foreman API Guide</a></p>
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_satellite/6.15/html/api_guide/index">Red Hat Satellite 6.15 API Guide</a></p>
+<p>Red Hat documentation requires a Red Hat account with an active subscription to view. A (free) Red Hat Developer subscription is sufficient to meet this requirement and can be obtained by visiting the <a href="https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux">Red Hat Developer Program</a>.</p>
+]]></content>
         </item>
         
     </channel>

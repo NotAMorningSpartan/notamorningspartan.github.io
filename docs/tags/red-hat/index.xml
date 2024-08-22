@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Simplify and Automate</title>
-    <link>https://notamorningspartan.github.io/</link>
-    <description>Recent content on Simplify and Automate</description>
+    <title>red hat on Simplify and Automate</title>
+    <link>https://notamorningspartan.github.io/tags/red-hat/</link>
+    <description>Recent content in red hat on Simplify and Automate</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 21 Aug 2024 15:54:51 -0500</lastBuildDate>
-    <atom:link href="https://notamorningspartan.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://notamorningspartan.github.io/tags/red-hat/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Using Ansible to Interact with the Satellite API</title>
       <link>https://notamorningspartan.github.io/posts/satellite-api/</link>
       <pubDate>Wed, 21 Aug 2024 15:54:51 -0500</pubDate>
       <guid>https://notamorningspartan.github.io/posts/satellite-api/</guid>
       <description>Red Hat Satellite is an essential tool in large scale enterprise environments that can be used to manage repository content, as well as provision, manage, and scan deployed systems.&#xA;Managing connected hosts is an essential task when maintaining any deployed instance of Red Hat Satellite, and one of the easiest tools to accomplish this on a mass scale is using Ansible.&#xA;Red Hat provides the certified redhat.satellite Ansible collection that can accomodate most workflows, of which its upstream is the theforeman.</description>
-    </item>
-    <item>
-      <title>About Me</title>
-      <link>https://notamorningspartan.github.io/about/</link>
-      <pubDate>Wed, 21 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://notamorningspartan.github.io/about/</guid>
-      <description>My name is Tyler Kness-Miller, and this is my personal blog where I share the knowledgebase and tricks I&amp;rsquo;ve learned from working with Ansible Automation Platform, Red Hat Enterprise Linux, GitLab, Openshift, and a variety of other enterprise technologies.&#xA;Currently, I work as a Principal Linux Systems Engineer at ECS Federal, responsible for the infrastructure, baseline, and tools responsible for supporting and running linux resources for a public sector customer.</description>
     </item>
   </channel>
 </rss>
