@@ -2,13 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://notamorningspartan.github.io/tags/ansible/</loc>
-    <lastmod>2024-08-21T15:54:51-05:00</lastmod>
+    <loc>https://notamorningspartan.github.io/tags/aap/</loc>
+    <lastmod>2024-08-29T15:58:29-05:00</lastmod>
   </url><url>
-    <loc>https://notamorningspartan.github.io/tags/api/</loc>
-    <lastmod>2024-08-21T15:54:51-05:00</lastmod>
+    <loc>https://notamorningspartan.github.io/posts/infrastructure-as-code-aap/</loc>
+    <lastmod>2024-08-29T15:58:29-05:00</lastmod>
+  </url><url>
+    <loc>https://notamorningspartan.github.io/tags/ansible/</loc>
+    <lastmod>2024-08-29T15:58:29-05:00</lastmod>
+  </url><url>
+    <loc>https://notamorningspartan.github.io/tags/infrastructure-as-code/</loc>
+    <lastmod>2024-08-29T15:58:29-05:00</lastmod>
   </url><url>
     <loc>https://notamorningspartan.github.io/posts/</loc>
+    <lastmod>2024-08-29T15:58:29-05:00</lastmod>
+  </url><url>
+    <loc>https://notamorningspartan.github.io/</loc>
+    <lastmod>2024-08-29T15:58:29-05:00</lastmod>
+  </url><url>
+    <loc>https://notamorningspartan.github.io/tags/</loc>
+    <lastmod>2024-08-29T15:58:29-05:00</lastmod>
+  </url><url>
+    <loc>https://notamorningspartan.github.io/tags/api/</loc>
     <lastmod>2024-08-21T15:54:51-05:00</lastmod>
   </url><url>
     <loc>https://notamorningspartan.github.io/tags/red-hat/</loc>
@@ -18,12 +33,6 @@
     <lastmod>2024-08-21T15:54:51-05:00</lastmod>
   </url><url>
     <loc>https://notamorningspartan.github.io/posts/satellite-host-collection-ansible/</loc>
-    <lastmod>2024-08-21T15:54:51-05:00</lastmod>
-  </url><url>
-    <loc>https://notamorningspartan.github.io/</loc>
-    <lastmod>2024-08-21T15:54:51-05:00</lastmod>
-  </url><url>
-    <loc>https://notamorningspartan.github.io/tags/</loc>
     <lastmod>2024-08-21T15:54:51-05:00</lastmod>
   </url><url>
     <loc>https://notamorningspartan.github.io/about/</loc>

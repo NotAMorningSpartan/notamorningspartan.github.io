@@ -6,17 +6,23 @@ aliases = ["about-us","about-hugo","contact"]
   name = "Tyler Kness-Miller"
 +++
 
-My name is Tyler Kness-Miller, and this is my personal blog where I share the knowledgebase and tricks I've learned from working with Ansible Automation Platform, Red Hat Enterprise Linux, GitLab, Openshift, and a variety of other enterprise technologies. 
+Hi! My name is Tyler Kness-Miller :wave:
 
-Currently, I work as a Principal Linux Systems Engineer at ECS Federal, responsible for the infrastructure, baseline, and tools responsible for supporting and running linux resources for a public sector customer. 
+I live in Huntsville, Alabama, and I'm a Principal Systems Engineer at [ECS Federal](https://ecstech.com/).
+
+This is my personal blog where I share the knowledgebase and tricks I've learned from working with Ansible Automation Platform, Red Hat Enterprise Linux, GitLab, Openshift, and a variety of other enterprise technologies. 
 
 I have received the following certifications:
 
 - Red Hat Certified Systems Administrator (RHCSA)
 - Red Hat Certified Engineer (RHCE)
 
-Any opinions and viewpoints expressed herein are my own and do not represent my employer's in any way. 
+# About this Site
 
-## Resume
+This blog was built with [Hugo](https://gohugo.io/), a status site generator, and is hosted on [GitHub Pages](https://pages.github.com/).
+
+This site currently uses the [hello-friend-ng](https://github.com/rhazdon/hugo-theme-hello-friend-ng) theme.
+
+# Resume
 
 {{< embed-pdf url="/cv.pdf" >}}

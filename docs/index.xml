@@ -6,8 +6,15 @@
     <description>Recent content on Simplify and Automate</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 21 Aug 2024 15:54:51 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 29 Aug 2024 15:58:29 -0500</lastBuildDate>
     <atom:link href="https://notamorningspartan.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AAP and Infrastructure as Code</title>
+      <link>https://notamorningspartan.github.io/posts/infrastructure-as-code-aap/</link>
+      <pubDate>Thu, 29 Aug 2024 15:58:29 -0500</pubDate>
+      <guid>https://notamorningspartan.github.io/posts/infrastructure-as-code-aap/</guid>
+      <description>Picture this. You&amp;rsquo;re tasked with creating a brand new instance of Ansible Automation Platform your team to match the current production instance. Easy right? Red Hat makes this process easy with an intiutive Ansible playbook and structured inventory file to make the installation process relatively painless.&#xA;But what happens once the instance is complete? By now, your team most likely has tens, if not hundreds of job templates, projects, inventories, credentials; all of these resources that must now be re-created manually.</description>
+    </item>
     <item>
       <title>Satellite Host Collections and Ansible</title>
       <link>https://notamorningspartan.github.io/posts/satellite-host-collection-ansible/</link>
@@ -20,7 +27,7 @@
       <link>https://notamorningspartan.github.io/about/</link>
       <pubDate>Wed, 21 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://notamorningspartan.github.io/about/</guid>
-      <description>My name is Tyler Kness-Miller, and this is my personal blog where I share the knowledgebase and tricks I&amp;rsquo;ve learned from working with Ansible Automation Platform, Red Hat Enterprise Linux, GitLab, Openshift, and a variety of other enterprise technologies.&#xA;Currently, I work as a Principal Linux Systems Engineer at ECS Federal, responsible for the infrastructure, baseline, and tools responsible for supporting and running linux resources for a public sector customer.</description>
+      <description>Hi! My name is Tyler Kness-Miller &amp;#x1f44b;&#xA;I live in Huntsville, Alabama, and I&amp;rsquo;m a Principal Systems Engineer at ECS Federal.&#xA;This is my personal blog where I share the knowledgebase and tricks I&amp;rsquo;ve learned from working with Ansible Automation Platform, Red Hat Enterprise Linux, GitLab, Openshift, and a variety of other enterprise technologies.&#xA;I have received the following certifications:&#xA;Red Hat Certified Systems Administrator (RHCSA) Red Hat Certified Engineer (RHCE) About this Site This blog was built with Hugo, a status site generator, and is hosted on GitHub Pages.</description>
     </item>
   </channel>
 </rss>

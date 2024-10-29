@@ -5,6 +5,7 @@ theme        = ["hugo-embed-pdf-shortcode", "hello-friend-ng"]
 paginate     = 10
 publishDir   = "docs"
 enableInlineShortcodes = true
+enableEmoji = true
 
 [params]
   dateform        = "Jan 2, 2006"
