@@ -8,9 +8,9 @@ aliases = ["about-us","about-hugo","contact"]
 
 Hi! My name is Tyler Kness-Miller :wave:
 
-I live in Huntsville, Alabama, and I'm a Principal Systems Engineer at [ECS Federal](https://ecstech.com/).
+I live in Huntsville, Alabama, and I'm a Senior Specialist Solutions Architect at [Red Hat](https://redhat.com/) specializing in Red Hat Openshift in the North American Public Sector.
 
-This is my personal blog where I share the knowledgebase and tricks I've learned from working with Ansible Automation Platform, Red Hat Enterprise Linux, GitLab, Openshift, and a variety of other enterprise technologies. 
+This is my personal blog where I share the knowledgebase and tricks I've learned from working with Ansible Automation Platform, Red Hat OpenShift, Red Hat Enterprise Linux, GitLab, and a variety of other enterprise technologies. 
 
 I have received the following certifications:
 
